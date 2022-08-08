@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+  - name: creating ec2 key
+    ec2_key:
+     name: sample
+     region: ap-southeast-2
+    register: keyout
+  
+  - name: displaying pvt key
+    debug: 
+     var: keyout
+  
+  - name: storing pvt key in a file
+    copy:
+     content: "{{keyout.key.private_key}}"
+     dest: ./sample-key.pem
+    when: keyout.changed
